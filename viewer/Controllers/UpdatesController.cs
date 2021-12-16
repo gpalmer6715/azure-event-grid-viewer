@@ -69,6 +69,7 @@ namespace viewer.Controllers
                 // Check the event type.
                 // Return the validation code if it's 
                 // a subscription validation request. 
+                /*
                 if (EventTypeSubcriptionValidation)
                 {
                     return await HandleValidation(jsonContent);
@@ -89,7 +90,10 @@ namespace viewer.Controllers
                     if (!string.IsNullOrWhiteSpace(headerToken)) return new StatusCodeResult(417);
                     if (!string.IsNullOrWhiteSpace(queryToken)) return new StatusCodeResult(418);
                     return Ok();
-                }
+                }*/
+
+                if (!string.IsNullOrWhiteSpace(headerToken)) return new StatusCodeResult(417);
+                if (!string.IsNullOrWhiteSpace(queryToken)) return new StatusCodeResult(418);
 
                 return BadRequest();                
             }
