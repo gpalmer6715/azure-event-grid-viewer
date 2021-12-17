@@ -30,13 +30,13 @@ namespace viewer.Controllers
                "Notification";
 
         private readonly IHubContext<GridEventsHub> _hubContext;
-        private readonly ILogger _appInsights;
+        private readonly ILogger<UpdatesController> _appInsights;
 
         #endregion
 
         #region Constructors
 
-        public UpdatesController(IHubContext<GridEventsHub> gridEventsHubContext, ILogger appInsights)
+        public UpdatesController(IHubContext<GridEventsHub> gridEventsHubContext, ILogger<UpdatesController> appInsights)
         {
             this._hubContext = gridEventsHubContext;
             _appInsights = appInsights;
@@ -68,8 +68,8 @@ namespace viewer.Controllers
             using (var reader = new StreamReader(Request.Body, Encoding.UTF8))
             {
                 var jsonContent = await reader.ReadToEndAsync();
-                //var headerToken = HttpContext.Request.Headers["Authorization"].FirstOrDefault();
-                //var queryToken = HttpContext.Request.Query["Authorization"].FirstOrDefault();
+                var headerToken = HttpContext.Request.Headers["Authorization"].FirstOrDefault();
+                var queryToken = HttpContext.Request.Query["Authorization"].FirstOrDefault();
                 // Check the event type.
                 // Return the validation code if it's 
                 // a subscription validation request. 
@@ -84,16 +84,16 @@ namespace viewer.Controllers
                     // the CloudEvents schema
                     if (IsCloudEvent(jsonContent))
                     {
-                        return await HandleCloudEvent(jsonContent);
-                        //if (!string.IsNullOrWhiteSpace(headerToken)) return new StatusCodeResult(417);
-                        //if (!string.IsNullOrWhiteSpace(queryToken)) return new StatusCodeResult(418);
-                        //return Ok();
+                        //return await HandleCloudEvent(jsonContent);
+                        if (!string.IsNullOrWhiteSpace(headerToken)) return new StatusCodeResult(417);
+                        if (!string.IsNullOrWhiteSpace(queryToken)) return new StatusCodeResult(418);
+                        return Ok();
                     }
 
-                    return await HandleGridEvents(jsonContent);
-                    //if (!string.IsNullOrWhiteSpace(headerToken)) return new StatusCodeResult(417);
-                    //if (!string.IsNullOrWhiteSpace(queryToken)) return new StatusCodeResult(418);
-                    //return Ok();
+                    //return await HandleGridEvents(jsonContent);
+                    if (!string.IsNullOrWhiteSpace(headerToken)) return new StatusCodeResult(417);
+                    if (!string.IsNullOrWhiteSpace(queryToken)) return new StatusCodeResult(418);
+                    return Ok();
                 }
 
                 //if (!string.IsNullOrWhiteSpace(headerToken)) return new StatusCodeResult(417);
