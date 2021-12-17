@@ -74,6 +74,8 @@ namespace viewer.Controllers
                 var queryToken = HttpContext.Request.Query["Authorization"].FirstOrDefault();
                 _appInsights.LogTrace($"headerToken: {headerToken}");
                 _appInsights.LogTrace($"queryToken: {queryToken}");
+                _appInsights.LogError($"error");
+                _appInsights.LogWarning("warning");
                 // Check the event type.
                 // Return the validation code if it's 
                 // a subscription validation request. 
