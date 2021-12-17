@@ -10,6 +10,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using viewer.Hubs;
 using viewer.Models;
 
@@ -29,14 +30,17 @@ namespace viewer.Controllers
                "Notification";
 
         private readonly IHubContext<GridEventsHub> _hubContext;
+        private readonly ILogger _appInsights;
 
         #endregion
 
         #region Constructors
 
-        public UpdatesController(IHubContext<GridEventsHub> gridEventsHubContext)
+        public UpdatesController(IHubContext<GridEventsHub> gridEventsHubContext, ILogger appInsights)
         {
             this._hubContext = gridEventsHubContext;
+            _appInsights = appInsights;
+            _appInsights.LogInformation("Constructor Log");
         }
 
         #endregion
