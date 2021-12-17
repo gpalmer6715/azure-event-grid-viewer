@@ -71,8 +71,6 @@ namespace viewer.Controllers
                 var queryToken = HttpContext.Request.Query["Authorization"].FirstOrDefault();
                 _appInsights.LogInformation($"headerToken: {headerToken}");
                 _appInsights.LogInformation($"queryToken: {queryToken}");
-                _appInsights.LogError($"error");
-                _appInsights.LogWarning("warning");
                 // Check the event type.
                 // Return the validation code if it's 
                 // a subscription validation request. 
@@ -85,6 +83,8 @@ namespace viewer.Controllers
                 {
                     // Check to see if this is passed in using
                     // the CloudEvents schema
+                    if (headerToken != "testHeaderToken") return Unauthorized();
+                    
                     if (IsCloudEvent(jsonContent))
                     {
                         return await HandleCloudEvent(jsonContent);
