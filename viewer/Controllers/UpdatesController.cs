@@ -40,7 +40,6 @@ namespace viewer.Controllers
         {
             this._hubContext = gridEventsHubContext;
             _appInsights = appInsights;
-            _appInsights.LogInformation("Constructor Log");
         }
 
         #endregion
@@ -67,13 +66,11 @@ namespace viewer.Controllers
         {
             using (var reader = new StreamReader(Request.Body, Encoding.UTF8))
             {
-                _appInsights.LogInformation("Post Enter");
-                
                 var jsonContent = await reader.ReadToEndAsync();
                 var headerToken = HttpContext.Request.Headers["Authorization"].FirstOrDefault();
                 var queryToken = HttpContext.Request.Query["Authorization"].FirstOrDefault();
-                _appInsights.LogTrace($"headerToken: {headerToken}");
-                _appInsights.LogTrace($"queryToken: {queryToken}");
+                _appInsights.LogInformation($"headerToken: {headerToken}");
+                _appInsights.LogInformation($"queryToken: {queryToken}");
                 _appInsights.LogError($"error");
                 _appInsights.LogWarning("warning");
                 // Check the event type.
