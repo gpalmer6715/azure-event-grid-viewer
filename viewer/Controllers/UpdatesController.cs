@@ -67,13 +67,17 @@ namespace viewer.Controllers
         {
             using (var reader = new StreamReader(Request.Body, Encoding.UTF8))
             {
+                _appInsights.LogInformation("Post Enter");
+                
                 var jsonContent = await reader.ReadToEndAsync();
                 var headerToken = HttpContext.Request.Headers["Authorization"].FirstOrDefault();
                 var queryToken = HttpContext.Request.Query["Authorization"].FirstOrDefault();
+                _appInsights.LogTrace($"headerToken: {headerToken}");
+                _appInsights.LogTrace($"queryToken: {queryToken}");
                 // Check the event type.
                 // Return the validation code if it's 
                 // a subscription validation request. 
-                
+
                 if (EventTypeSubcriptionValidation)
                 {
                     return await HandleValidation(jsonContent);
@@ -84,20 +88,11 @@ namespace viewer.Controllers
                     // the CloudEvents schema
                     if (IsCloudEvent(jsonContent))
                     {
-                        //return await HandleCloudEvent(jsonContent);
-                        if (!string.IsNullOrWhiteSpace(headerToken)) return new StatusCodeResult(417);
-                        if (!string.IsNullOrWhiteSpace(queryToken)) return new StatusCodeResult(418);
-                        return Ok();
+                        return await HandleCloudEvent(jsonContent);
                     }
 
-                    //return await HandleGridEvents(jsonContent);
-                    if (!string.IsNullOrWhiteSpace(headerToken)) return new StatusCodeResult(417);
-                    if (!string.IsNullOrWhiteSpace(queryToken)) return new StatusCodeResult(418);
-                    return Ok();
+                    return await HandleGridEvents(jsonContent);
                 }
-
-                //if (!string.IsNullOrWhiteSpace(headerToken)) return new StatusCodeResult(417);
-                //if (!string.IsNullOrWhiteSpace(queryToken)) return new StatusCodeResult(418);
 
                 return BadRequest();                
             }
